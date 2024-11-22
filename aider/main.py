@@ -959,7 +959,16 @@ def load_slow_imports(swallow=True):
 
 from aider.api import create_app
 
-app = create_app()
+def create_flask_app():
+    """Create Flask app with default settings for API server"""
+    app = create_app()
+    return app
+
+app = create_flask_app()
 
 if __name__ == "__main__":
-    app.run(debug=True, port=5001)
+    # When running directly, parse args and decide whether to run Flask or CLI
+    if len(sys.argv) > 1:
+        main()
+    else:
+        app.run(debug=True, port=5001)
