@@ -957,6 +957,9 @@ def load_slow_imports(swallow=True):
             raise e
 
 
+from api import create_app
+
+app = create_app()
+
 if __name__ == "__main__":
-    status = main()
-    sys.exit(status)
+    app.run(debug=True)
