@@ -38,7 +38,8 @@ def get_history(session_id):
 @api_bp.route('/sessions', methods=['POST'])
 def create_session():
     try:
-        session_id = aider_service.create_session()
+        session_args = request.json if request.json else {}
+        session_id = aider_service.create_session(session_args)
         return jsonify({'session_id': session_id}), 201
     except Exception as e:
         return jsonify({'error': str(e)}), 500

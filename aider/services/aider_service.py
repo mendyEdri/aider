@@ -8,17 +8,28 @@ class AiderService:
         self.sessions: Dict[str, Coder] = {}
         self.parser = get_parser([], None)
         
-    def create_session(self) -> str:
-        """Create a new Aider session"""
+    def create_session(self, session_args: dict = None) -> str:
+        """Create a new Aider session with optional arguments"""
         session_id = str(uuid.uuid4())
         
-        # Initialize with default settings
-        args = self.parser.parse_args([])
+        # Convert dict to list of args
+        arg_list = []
+        if session_args:
+            for key, value in session_args.items():
+                if isinstance(value, bool):
+                    if value:
+                        arg_list.append(f"--{key}")
+                else:
+                    arg_list.append(f"--{key}")
+                    arg_list.append(str(value))
+        
+        # Initialize with provided or default settings
+        args = self.parser.parse_args(arg_list)
         io = InputOutput(
-            pretty=False,
+            pretty=args.pretty if hasattr(args, 'pretty') else False,
             yes_always=True,
-            input_history_file=None,
-            chat_history_file=None
+            input_history_file=args.input_history_file if hasattr(args, 'input_history_file') else None,
+            chat_history_file=args.chat_history_file if hasattr(args, 'chat_history_file') else None
         )
         
         analytics = Analytics()
