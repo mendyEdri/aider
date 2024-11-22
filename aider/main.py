@@ -957,7 +957,7 @@ def load_slow_imports(swallow=True):
             raise e
 
 
-from api import create_app
+from aider.api import create_app
 
 app = create_app()
 
