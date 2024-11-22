@@ -16,15 +16,21 @@ class AiderService:
         arg_list = []
         if session_args:
             for key, value in session_args.items():
+                if not isinstance(key, str):
+                    continue
+                    
                 # Skip yes_always as it's handled separately
                 if key == 'yes_always':
                     continue
                     
+                # Convert key to command line format
+                cmd_key = str(key).replace('_', '-')
+                
                 if isinstance(value, bool):
                     if value:
-                        arg_list.append(f"--{key}")
-                else:
-                    arg_list.append(f"--{key}")
+                        arg_list.append(f"--{cmd_key}")
+                elif value is not None:
+                    arg_list.append(f"--{cmd_key}")
                     arg_list.append(str(value))
         
         # Initialize with provided or default settings
