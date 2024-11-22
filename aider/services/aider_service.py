@@ -37,8 +37,17 @@ class AiderService:
         
         analytics = Analytics()
         
+        # Initialize the model with proper configuration
+        main_model = models.Model(
+            args.model if hasattr(args, 'model') else "gpt-4",
+            weak_model=args.weak_model if hasattr(args, 'weak_model') else None,
+            editor_model=args.editor_model if hasattr(args, 'editor_model') else None,
+            editor_edit_format=args.editor_edit_format if hasattr(args, 'editor_edit_format') else None,
+        )
+        
         coder = Coder.create(
-            main_model="gpt-4",
+            main_model=main_model,
+            edit_format=args.edit_format if hasattr(args, 'edit_format') else None,
             io=io,
             repo=None,
             fnames=[],
