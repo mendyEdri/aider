@@ -2,6 +2,7 @@ import uuid
 from typing import Dict, Optional
 from ..main import Coder, get_parser, InputOutput, Analytics, models
 from pathlib import Path
+import os
 
 class AiderService:
     def __init__(self):
@@ -13,12 +14,25 @@ class AiderService:
         print(f"DEBUG: create_session called with args: {session_args}")
         session_id = str(uuid.uuid4())
         
+        # Get working directory from args or use default generated directory
+        work_dir = session_args.get('work_dir', '/generated')
+        work_path = Path(work_dir).resolve()
+        
+        # Create the generated directory if it doesn't exist
+        try:
+            work_path.mkdir(parents=True, exist_ok=True)
+            print(f"DEBUG: Created or verified directory: {work_path}")
+        except Exception as e:
+            raise ValueError(f"Failed to create directory {work_dir}: {str(e)}")
+            
+        print(f"DEBUG: Using work directory: {work_path}")
+        
         # Convert dict to list of args, handling special cases
         arg_list = []
         print(f"DEBUG: Converting session_args to arg_list")
         if session_args:
             for key, value in session_args.items():
-                if not isinstance(key, str):
+                if not isinstance(key, str) or key == 'work_dir':  # Skip work_dir as we handle it separately
                     continue
                     
                 # Skip yes_always as it's handled separately
@@ -37,8 +51,13 @@ class AiderService:
         
         # Initialize with provided or default settings
         args = self.parser.parse_args(arg_list)
+        
+        # Get yes_always value with default True
+        yes_always = session_args.get('yes_always', True) if session_args else True
+        
         io = InputOutput(
             pretty=args.pretty if hasattr(args, 'pretty') else False,
+            yes=yes_always,  # Set yes parameter for auto-confirmation
             input_history_file=args.input_history_file if hasattr(args, 'input_history_file') else None,
             chat_history_file=args.chat_history_file if hasattr(args, 'chat_history_file') else None
         )
@@ -58,11 +77,14 @@ class AiderService:
             edit_format=args.edit_format if hasattr(args, 'edit_format') else None,
             io=io,
             repo=None,
-            fnames=[],
+            fnames=[],  # Don't pass the work directory as a file
             analytics=analytics,
             commands=None,
             use_git=False
         )
+        
+        # Set the root directory explicitly
+        coder.root = str(work_path)
         
         self.sessions[session_id] = coder
         return session_id
