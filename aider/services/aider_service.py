@@ -12,10 +12,14 @@ class AiderService:
         """Create a new Aider session with optional arguments"""
         session_id = str(uuid.uuid4())
         
-        # Convert dict to list of args
+        # Convert dict to list of args, handling special cases
         arg_list = []
         if session_args:
             for key, value in session_args.items():
+                # Skip yes_always as it's handled separately
+                if key == 'yes_always':
+                    continue
+                    
                 if isinstance(value, bool):
                     if value:
                         arg_list.append(f"--{key}")
