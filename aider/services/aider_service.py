@@ -27,7 +27,6 @@ class AiderService:
         args = self.parser.parse_args(arg_list)
         io = InputOutput(
             pretty=args.pretty if hasattr(args, 'pretty') else False,
-            yes_always=True,
             input_history_file=args.input_history_file if hasattr(args, 'input_history_file') else None,
             chat_history_file=args.chat_history_file if hasattr(args, 'chat_history_file') else None
         )
