@@ -1,6 +1,6 @@
 import uuid
 from typing import Dict, Optional
-from ..main import Coder, get_parser, InputOutput, Analytics
+from ..main import Coder, get_parser, InputOutput, Analytics, models
 from pathlib import Path
 
 class AiderService:
