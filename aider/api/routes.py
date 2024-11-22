@@ -39,6 +39,7 @@ def get_history(session_id):
 def create_session():
     try:
         session_args = request.json if request.json else {}
+        print(f"DEBUG: /sessions POST received args: {session_args}")
         session_id = aider_service.create_session(session_args)
         return jsonify({'session_id': session_id}), 201
     except Exception as e:

@@ -10,10 +10,12 @@ class AiderService:
         
     def create_session(self, session_args: dict = None) -> str:
         """Create a new Aider session with optional arguments"""
+        print(f"DEBUG: create_session called with args: {session_args}")
         session_id = str(uuid.uuid4())
         
         # Convert dict to list of args, handling special cases
         arg_list = []
+        print(f"DEBUG: Converting session_args to arg_list")
         if session_args:
             for key, value in session_args.items():
                 if not isinstance(key, str):
