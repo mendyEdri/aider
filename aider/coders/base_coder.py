@@ -214,6 +214,7 @@ class Coder:
             if map_tokens > 0:
                 refresh = self.repo_map.refresh
                 lines.append(f"Repo-map: using {map_tokens} tokens, {refresh} refresh")
+                print(f"** Repo-map: {map_tokens} tokens, {refresh} refresh")
                 max_map_tokens = 2048
                 if map_tokens > max_map_tokens:
                     lines.append(
@@ -270,7 +271,7 @@ class Coder:
     ):
         # Fill in a dummy Analytics if needed, but it is never .enable()'d
         self.analytics = analytics if analytics is not None else Analytics()
-
+        print("** init based coder **", fnames)
         self.event = self.analytics.event
         self.chat_language = chat_language
         self.commit_before_message = []
@@ -339,6 +340,7 @@ class Coder:
         self.commands.coder = self
 
         self.repo = repo
+        print("** init based coder - REPO **", self.repo)
         if use_git and self.repo is None:
             try:
                 self.repo = GitRepo(
@@ -397,8 +399,9 @@ class Coder:
             use_repo_map = map_tokens > 0
 
         max_inp_tokens = self.main_model.info.get("max_input_tokens") or 0
-
+        print("** init based coder - MAX INP TOKENS **", max_inp_tokens)
         has_map_prompt = hasattr(self, "gpt_prompts") and self.gpt_prompts.repo_content_prefix
+        print("** init based coder - MAX INP TOKENS **", self.root)
 
         if use_repo_map and self.repo and has_map_prompt:
             self.repo_map = RepoMap(
@@ -593,6 +596,7 @@ class Coder:
         return matches
 
     def get_repo_map(self, force_refresh=False):
+        print("** self.repo_map", self.repo_map)
         if not self.repo_map:
             return
 
@@ -1113,6 +1117,7 @@ class Coder:
                 kwargs["max_tokens"] = 1
 
                 try:
+                    print("** base coder completion **")
                     completion = litellm.completion(
                         model=self.main_model.name,
                         messages=self.cache_warming_chunks.cacheable_messages(),

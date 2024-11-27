@@ -144,6 +144,9 @@ class RepoMap:
         if self.verbose:
             num_tokens = self.token_count(files_listing)
             self.io.tool_output(f"Repo-map: {num_tokens / 1024:.1f} k-tokens")
+        
+        num_tokens = self.token_count(files_listing)
+        print(f"** Repo-map: {num_tokens / 1024:.1f} tokens")
 
         if chat_files:
             other = "other "

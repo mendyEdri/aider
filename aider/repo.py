@@ -65,7 +65,7 @@ class GitRepo:
             check_fnames = fnames
         else:
             check_fnames = ["."]
-
+        print("** init based repo **", check_fnames, fnames, git_dname)
         repo_paths = []
         for fname in check_fnames:
             fname = Path(fname)

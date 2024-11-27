@@ -563,7 +563,7 @@ class Commands:
     def cmd_diff(self, args=""):
         "Display the diff of changes since the last message"
         try:
-            self.raw_cmd_diff(args)
+            return self.raw_cmd_diff(args)
         except ANY_GIT_ERROR as err:
             self.io.tool_error(f"Unable to complete diff: {err}")
 
@@ -595,6 +595,7 @@ class Commands:
         )
 
         self.io.print(diff)
+        return diff
 
     def quote_fname(self, fname):
         if " " in fname and '"' not in fname:

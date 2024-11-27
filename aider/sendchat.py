@@ -48,6 +48,7 @@ def send_completion(
     if not stream and CACHE is not None and key in CACHE:
         return hash_object, CACHE[key]
 
+    print("** send chat completion **", kwargs)
     res = litellm.completion(**kwargs)
 
     if not stream and CACHE is not None:
